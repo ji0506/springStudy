@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.BoardMapper">
+
+	<select id="selectBoardList" parameterType="org.zerock.domain.Board" resultType="org.zerock.domain.Board">
+		SELECT * FROM ( 
+			SELECT 
+				*
+				,ROW_NUMBER() over(ORDER BY regDate desc) AS rownum
+				,count(1) over() AS totalCount
+			from board
+			where kate_no = #{kateNo}
+			order by regDate DESC
+		) c
+		order by rownum 	
+	</select>
+	
+
+</mapper>
