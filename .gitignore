@@ -3,3 +3,5 @@ Servers/
 .metadata/
 build/
 .settings/
+/target/
+target/

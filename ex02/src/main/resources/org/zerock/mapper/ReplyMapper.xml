@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.mapper.ReplyMapper">
+
+	<select id="getList" resultType="org.zerock.domain.BoardVO">
+		<![CDATA[
+			select * from tbl_board where bno > 0
+		]]>
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		<![CDATA[
+			select count(*) from tbl_board where bno > 0
+		]]>
+	</select>
+
+
+	<select id="getListwithPage" resultType="org.zerock.domain.ReplyVO">
+		select rno, bno,reply, replyer, TO_CHAR(replyDate, 'YYYY-MM-DD') as replyDate2, updateDate
+		from tbl_reply
+		where bno = #{bno}
+		order by rno asc
+	</select>
+
+	
+	<insert id="insert">
+		insert into tbl_reply (rno, bno, reply, replyer)
+		values (seq_reply.nextval, #{bno}, #{reply}, #{replyer})
+	</insert>
+	
+	<insert id="insertSelectKey">
+	
+		<selectKey keyProperty="bno" order="BEFORE"
+			resultType="long">
+			select seq_board.nextval from dual		
+		</selectKey>
+		
+		insert into tbl_board (bno, title, content, writer)
+		values (#{bno}, #{title}, #{content}, #{writer})
+	
+	</insert>
+	
+	<select id="read" resultType="org.zerock.domain.ReplyVO">
+		<![CDATA[
+			select * from tbl_reply where rno = #{rno}
+		]]>
+	</select>
+	
+	<delete id="delete">
+		delete from tbl_reply where rno = #{rno}
+	</delete>
+	
+	<update id="update">
+		update tbl_reply
+		set reply = #{reply},
+		updateDate = sysdate
+		where rno = #{rno}
+	</update>
+</mapper>
